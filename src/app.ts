@@ -9,8 +9,14 @@ import AT from "./AlphaTeilchen"
 //var at3: AT = new AT(610,710);
 //var at4: AT = new AT(590,710);
 var alphaTeilchenArray = [];
-var goldAtomArray = [];
-var ga = new GA();
+
+var ga = new GA(630,360);
+var ga2 = new GA(100,300);
+var ga3 = new GA(250,330);
+var ga4 = new GA(800,300);
+var ga5 = new GA(1000,360);
+
+var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
 
   const sketch = (s) => {
 
@@ -35,15 +41,25 @@ var ga = new GA();
 
       s.drawGold = () => {
         s.fill(255,0,0);
-        s.ellipse(ga.getCorX(), ga.getCorY(),10, 10);
+        for(var i = 0;i<goldAtomArray.length;i++){
+        s.ellipse(goldAtomArray[i].getCorX(), goldAtomArray[i].getCorY(),10, 10);
+      }
       };
 
       s.drawAplha = (atp: AT) => {
+        if(atp.getCorX()> 1280 || atp.getCorX()< 0 || atp.getCorY()> 900 || atp.getCorY()< 0){
+          atp.setCorX(Math.random()*1280);
+          atp.setCorY(710);
+          atp.setVelocityX(0);
+          atp.setVelocityY(-20000000*10**-7);
+          atp.beschleunigungx = 0;
+          atp.beschleunigungy = 0;
+        }
         s.fill(0,255,0);
         s.ellipse(atp.getCorX(), atp.getCorY(), 5, 5);
         var speedy = atp.getVelocityY() + atp.beschleunigungy;
-        if(!(atp.getCorX() == ga.getCorX())){
-          if(atp.getCorX() > ga.getCorX()){
+        if(!(atp.getCorX() == atp.getNearestGoldAtom().getCorX())){
+          if(atp.getCorX() > atp.getNearestGoldAtom().getCorX()){
           var speedx = atp.getVelocityX() + atp.beschleunigungx;
             atp.setCorX(atp.getCorX() + speedx);
           }else {
@@ -56,33 +72,52 @@ var ga = new GA();
 
         atp.setVelocityY(speedy);
         atp.setVelocityX(speedx);
-        console.log(speedx);
+        //console.log(speedx);
       };
 
       s.calcMinDistance = (atp: AT) => {
+        var distances = [];
+        var d;
+        for(var i = 0;i<goldAtomArray.length;i++){
         //var d = (ga.getCorY() - atp.getCorY())**2 + (ga.getCorX() - atp.getCorX())**2;
-        var d = (ga.getCorY() - atp.getCorY())**2 + (ga.getCorX()- atp.getCorX())**2;
-        console.log(d);
+         d = (goldAtomArray[i].getCorY() - atp.getCorY())**2 + (goldAtomArray[i].getCorX()- atp.getCorX())**2;
+        //console.log(d);
         d = Math.sqrt(d);
-        if(d < 0){d= d*-1}
+        distances.push(d);
+        //if(d < 0){d= d*-1}
+      }
+        for(var i = 0;i<distances.length;i++){
+          if(distances[i] <= d){
+            console.log(distances[i]);
+            console.log(d);
+            d=distances[i];
+
+            atp.setNearestGoldAtom(goldAtomArray[i]);
+            console.log(atp.getNearestGoldAtom());
+
+          }else{}
+        }
+        //console.log(d)
         atp.setDistanceToNearestGoldAtomy(d*10**-4);
         atp.setDistanceToNearestGoldAtomx(d*10**-4);
-        console.log("Distance: " + atp.getDistanceToNearestGoldAtomx());
-        console.log("Distance: " + atp.getDistanceToNearestGoldAtomy());
-      };
 
-
-      s.calcForce = (atp) =>{
         var a = 1/(4*Math.PI*(8.85419*10**-12))
-        var by = (4.05581*(10)**-36) / (atp.DistanceToNearestGoldAtomy)**2;
-        var bx = (4.05581*(10)**-36) / (atp.DistanceToNearestGoldAtomx)**2;
+        var by = (4.05581*(10)**-36) / (atp.getDistanceToNearestGoldAtomy())**2;
+        var bx = (4.05581*(10)**-36) / (atp.getDistanceToNearestGoldAtomx())**2;
         //console.log(a + "," + b);
         atp.forcey = a * by;
         atp.forcex = a* bx;
         atp.forcey = atp.forcey*10**-7;
         atp.forcex = atp.forcex*10**-7;
-        atp.beschleunigungy = atp.round(atp.forcey/atp.masse,2);
-        atp.beschleunigungx = atp.round(atp.forcex/atp.masse,2);
+        atp.beschleunigungy = atp.round(atp.forcey/atp.getMasse(),2);
+        atp.beschleunigungx = atp.round(atp.forcex/atp.getMasse(),2);
+
+
+
+      };
+
+
+      s.calcForce = (atp) =>{
 
 
 
@@ -95,60 +130,22 @@ var ga = new GA();
 
 
 
-      function Particle(atp: AT) {
-  this.x = atp.getCorX;
-  this.y = atp.getCorY;
 
-  this.history = [];
-
-  this.update = function() {
-    this.x += random(-10, 10);
-    this.y += random(-10, 10);
-
-    for (var i = 0; i < this.history.length; i++) {
-      this.history[i].x += random(-2, 2);
-      this.history[i].y += random(-2, 2);
-    }
-
-    var v = createVector(this.x, this.y);
-    this.history.push(v);
-    if (this.history.length > 100) {
-      this.history.splice(0, 1);
-    }
-  }
-
-  this.show = function() {
-    stroke(0);
-    fill(0, 150);
-    ellipse(this.x, this.y, 24, 24);
-
-    noFill();
-    s.beginShape();
-    for (var i = 0; i < this.history.length; i++) {
-      var pos = this.history[i];
-      //fill(random(255));
-      //ellipse(pos.x, pos.y, i, i);
-      vertex(pos.x, pos.y);
-    }
-    s.endShape();
-
-
-  }
-
-}
-
+let ia:number;
 function newAT(n:number){
   for(var i=0;i<n;i++){
-    alphaTeilchenArray.push(new AT(Math.random()*1280,710+Math.random()*300))
+    alphaTeilchenArray.push(new AT(Math.random()*1280,600))
   }
 }
 
-function simplifyDraw(p){
+function simplifyDraw(p: AT[]){
   for(var i = 0;i<p.length;i++){
-    s.drawAplha(p[i]);
     s.calcMinDistance(p[i]);
-    s.calcForce(p[i]);
+    s.drawAplha(p[i]);
+    //s.calcForce(p[i]);
+
   }
+  i = ia;
 }
 
 }

@@ -1,7 +1,13 @@
 export default class GoldAtom{
   masse: number;
-  CorX: number = 630;
-  CorY: number = 360;
+  public CorX: number = 630;
+  public CorY: number = 360;
+
+  constructor(x:number, y:number){
+    this.CorX = x;
+    this.CorY = y;
+  }
+
 
   getMasse(): number{
     return this.masse;
