@@ -2,105 +2,155 @@ import GA from "./GoldAtom"
 //import * as p5 from 'p5';
 import AT from "./AlphaTeilchen"
 
-  var at = new AT();
-  var ga = new GA();
-  var forcey: number = 0;
-  var forcex: number = 0;
-  var beschleunigungy = 0;
-  var beschleunigungx = 0;
+
+//var at: AT = new AT(630,710);
+//var at1: AT = new AT(700,710);
+//var at2: AT = new AT(720,710);
+//var at3: AT = new AT(610,710);
+//var at4: AT = new AT(590,710);
+var alphaTeilchenArray = [];
+var goldAtomArray = [];
+var ga = new GA();
+
   const sketch = (s) => {
 
       s.preload = () => {
-        // preload code
+
       }
 
       s.setup = () => {
         s.createCanvas(1280, 720);
-        s.background(255);
+        newAT(100);
+
       };
 
       s.draw = () => {
-
+        s.background(255);
         s.drawGold();
-        s.drawAplha();
-        s.calcMinDistance();
-        s.calcForce();
-        console.table([{DistanceX: at.getDistanceToNearestGoldAtomx(), DistanceY: at.getDistanceToNearestGoldAtomy(), ForceX: forcex, ForceY: forcey}])
+
+        simplifyDraw(alphaTeilchenArray);
+      //  console.table([{DistanceX: at.getDistanceToNearestGoldAtomx(), DistanceY: at.getDistanceToNearestGoldAtomy(), ForceX: at.forcex, ForceY: at.forcey}])
 
       };
-
-          s.mousePressed = () =>{
-          rect(10,10,10,10);
-      }
 
       s.drawGold = () => {
         s.fill(255,0,0);
         s.ellipse(ga.getCorX(), ga.getCorY(),10, 10);
       };
 
-      s.drawAplha = () => {
+      s.drawAplha = (atp: AT) => {
         s.fill(0,255,0);
-        s.ellipse(at.getCorX(), at.getCorY(), 5, 5);
-        var speedy = at.getVelocityY() + beschleunigungy;
-        if(!(at.getCorX() == ga.getCorX())){
-          if(at.getCorX() > ga.getCorX()){
-          var speedx = at.getVelocityX() + beschleunigungx;
-            at.setCorX(at.getCorX() + speedx);
-          }
-        }else {
-          var speedx = at.getVelocityX() - beschleunigungx;
-            at.setCorX(at.getCorX() + speedx);
+        s.ellipse(atp.getCorX(), atp.getCorY(), 5, 5);
+        var speedy = atp.getVelocityY() + atp.beschleunigungy;
+        if(!(atp.getCorX() == ga.getCorX())){
+          if(atp.getCorX() > ga.getCorX()){
+          var speedx = atp.getVelocityX() + atp.beschleunigungx;
+            atp.setCorX(atp.getCorX() + speedx);
+          }else {
+             speedx = atp.getVelocityX() - atp.beschleunigungx;
+              atp.setCorX(atp.getCorX() + speedx);
+        }
         }
 
-        at.setCorY(at.getCorY() + speedy);
+        atp.setCorY(atp.getCorY() + speedy);
 
-        at.setVelocityY(speedy);
-        at.setVelocityX(speedx);
+        atp.setVelocityY(speedy);
+        atp.setVelocityX(speedx);
         console.log(speedx);
       };
 
-      s.calcMinDistance = () => {
-        var d = (ga.getCorY() - at.getCorY())**2 + (ga.getCorX() - at.getCorX())**2;
+      s.calcMinDistance = (atp: AT) => {
+        //var d = (ga.getCorY() - atp.getCorY())**2 + (ga.getCorX() - atp.getCorX())**2;
+        var d = (ga.getCorY() - atp.getCorY())**2 + (ga.getCorX()- atp.getCorX())**2;
+        console.log(d);
         d = Math.sqrt(d);
         if(d < 0){d= d*-1}
-        at.setDistanceToNearestGoldAtomy(d*10**-4);
-        at.setDistanceToNearestGoldAtomx(d*10**-4);
-        console.log("Distance: " + at.getDistanceToNearestGoldAtomx());
-        console.log("Distance: " + at.getDistanceToNearestGoldAtomy());
+        atp.setDistanceToNearestGoldAtomy(d*10**-4);
+        atp.setDistanceToNearestGoldAtomx(d*10**-4);
+        console.log("Distance: " + atp.getDistanceToNearestGoldAtomx());
+        console.log("Distance: " + atp.getDistanceToNearestGoldAtomy());
       };
 
 
-
-      s.calcForce = () => {
+      s.calcForce = (atp) =>{
         var a = 1/(4*Math.PI*(8.85419*10**-12))
-        var by = (4.05581*(10)**-36) / (at.getDistanceToNearestGoldAtomy())**2;
-        var bx = (4.05581*(10)**-36) / (at.getDistanceToNearestGoldAtomx())**2;
+        var by = (4.05581*(10)**-36) / (atp.DistanceToNearestGoldAtomy)**2;
+        var bx = (4.05581*(10)**-36) / (atp.DistanceToNearestGoldAtomx)**2;
         //console.log(a + "," + b);
-        forcey = a * by;
-        forcex = a* bx;
-        forcey = forcey*10**-7;
-        forcex = forcex*10**-7;
-        beschleunigungy = round(forcey/at.getMasse(),3);
-        beschleunigungx = round(forcex/at.getMasse(),3);
-        console.log("Force: " + forcex);
-        console.log("Beschleunigung: " + beschleunigungx);
-        console.log("Beschleunigung: " + beschleunigungy);
+        atp.forcey = a * by;
+        atp.forcex = a* bx;
+        atp.forcey = atp.forcey*10**-7;
+        atp.forcex = atp.forcex*10**-7;
+        atp.beschleunigungy = atp.round(atp.forcey/atp.masse,2);
+        atp.beschleunigungx = atp.round(atp.forcex/atp.masse,2);
 
 
 
-      };
+      }
 
-      function round(wert, dez) {
-        wert = parseFloat(wert);
-        if (!wert) return 0;
-        dez = parseInt(dez);
-        if (!dez) dez=0;
 
-        var umrechnungsfaktor = Math.pow(10,dez);
 
-        return Math.round(wert * umrechnungsfaktor) / umrechnungsfaktor;
-}
+
+
+
+
+
+      function Particle(atp: AT) {
+  this.x = atp.getCorX;
+  this.y = atp.getCorY;
+
+  this.history = [];
+
+  this.update = function() {
+    this.x += random(-10, 10);
+    this.y += random(-10, 10);
+
+    for (var i = 0; i < this.history.length; i++) {
+      this.history[i].x += random(-2, 2);
+      this.history[i].y += random(-2, 2);
     }
 
+    var v = createVector(this.x, this.y);
+    this.history.push(v);
+    if (this.history.length > 100) {
+      this.history.splice(0, 1);
+    }
+  }
+
+  this.show = function() {
+    stroke(0);
+    fill(0, 150);
+    ellipse(this.x, this.y, 24, 24);
+
+    noFill();
+    s.beginShape();
+    for (var i = 0; i < this.history.length; i++) {
+      var pos = this.history[i];
+      //fill(random(255));
+      //ellipse(pos.x, pos.y, i, i);
+      vertex(pos.x, pos.y);
+    }
+    s.endShape();
+
+
+  }
+
+}
+
+function newAT(n:number){
+  for(var i=0;i<n;i++){
+    alphaTeilchenArray.push(new AT(Math.random()*1280,710+Math.random()*300))
+  }
+}
+
+function simplifyDraw(p){
+  for(var i = 0;i<p.length;i++){
+    s.drawAplha(p[i]);
+    s.calcMinDistance(p[i]);
+    s.calcForce(p[i]);
+  }
+}
+
+}
 
     let canvas = new p5(sketch);

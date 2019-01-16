@@ -2,12 +2,23 @@ export default class AlphaTeilchen{
 private masse: number = 6.64*10**-27;
 private velocityX: number = 0;
 private velocityY: number = -20000000*10**-7;
-private  CorX: number = 640;
-private  CorY: number = 710;
+private  CorX: number;
+public  CorY: number;
 private timeInS: number = 0;
 private streckeInM: number = 0;
 private  DistanceToNearestGoldAtomy: number;
 private  DistanceToNearestGoldAtomx: number;
+public   forcey: number = 0;
+public   forcex: number = 0;
+public   beschleunigungy = 0;
+public   beschleunigungx = 0;
+
+constructor(x:number, y:number){
+  this.CorX = x;
+  this.CorY = y;
+}
+
+
 
 public getMasse(): number{
   return this.masse;
@@ -23,11 +34,11 @@ public getVelocityY(): number{
   return this.velocityY;
 }
 
-public getCorX(): any{
+public getCorX(): number{
   return this.CorX;
 }
 
-public getCorY(): any{
+public getCorY(): number{
   return this.CorY;
 }
 
@@ -70,4 +81,22 @@ public getTime(): number{
 public getStrecke(): number{
   return this.streckeInM;
 }
+
+public round(wert, dez) {
+  wert = parseFloat(wert);
+  if (!wert) return 0;
+  dez = parseInt(dez);
+  if (!dez) dez=0;
+
+  var umrechnungsfaktor = Math.pow(10,dez);
+
+  return Math.round(wert * umrechnungsfaktor) / umrechnungsfaktor;
+}
+
+
+
+
+//  console.log("Force: " + this.forcex);
+//  console.log("Beschleunigung: " + this.beschleunigungx);
+//  console.log("Beschleunigung: " + this.beschleunigungy);
 }
