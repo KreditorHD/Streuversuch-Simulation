@@ -1,3 +1,5 @@
+import GA from "./GoldAtom"
+import * as p5 from "p5"
 export default class AlphaTeilchen{
 private masse: number = 6.64*10**-27;
 private velocityX: number = 0;
@@ -6,19 +8,32 @@ private  CorX: number;
 public  CorY: number;
 private timeInS: number = 0;
 private streckeInM: number = 0;
-private  DistanceToNearestGoldAtomy: number;
-private  DistanceToNearestGoldAtomx: number;
+private  DistanceToNearestGoldAtomy: number = null;
+private  DistanceToNearestGoldAtomx: number = null;
 public   forcey: number = 0;
 public   forcex: number = 0;
 public   beschleunigungy = 0;
 public   beschleunigungx = 0;
+public nearestGoldAtom: GA;
+private isClicked: boolean = false;
 
 constructor(x:number, y:number){
   this.CorX = x;
   this.CorY = y;
 }
 
+public getNearestGoldAtom(){
+  return this.nearestGoldAtom;
+}
 
+public getIsClicked(){
+  return this.isClicked;
+}
+
+public setNearestGoldAtom(ga: GA){
+  this.nearestGoldAtom = new GA(ga.getCorX(),ga.getCorY());
+
+}
 
 public getMasse(): number{
   return this.masse;
@@ -52,6 +67,10 @@ public getDistanceToNearestGoldAtomx(): number{
 
 public setVelocityX(vX: number):void{
   this.velocityX = vX;
+}
+
+public setIsClicked(b: boolean):void{
+  this.isClicked = b;
 }
 
 public setVelocityY(vY: number):void{
@@ -93,10 +112,14 @@ public round(wert, dez) {
   return Math.round(wert * umrechnungsfaktor) / umrechnungsfaktor;
 }
 
+public clicked(mouseY:number,mouseX:number){
+var d = (mouseY - this.getCorY())**2 + (mouseX - this.getCorX())**2;
+ d = Math.sqrt(d);
 
+ if(d < 15){
+   console.log("AtomClicked");
+   this.setIsClicked(true);
+ }
+}
 
-
-//  console.log("Force: " + this.forcex);
-//  console.log("Beschleunigung: " + this.beschleunigungx);
-//  console.log("Beschleunigung: " + this.beschleunigungy);
 }
