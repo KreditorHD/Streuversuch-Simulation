@@ -17,6 +17,7 @@ var ga4 = new GA(800,300);
 var ga5 = new GA(1000,360);
 
 var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
+var consoleLogArray: AT[] = [];
 
   const sketch = (s) => {
 
@@ -35,6 +36,7 @@ var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
         s.drawGold();
 
         simplifyDraw(alphaTeilchenArray);
+        s.DataLog();
       //  console.table([{DistanceX: at.getDistanceToNearestGoldAtomx(), DistanceY: at.getDistanceToNearestGoldAtomy(), ForceX: at.forcex, ForceY: at.forcey}])
 
       };
@@ -55,7 +57,9 @@ var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
           atp.beschleunigungx = 0;
           atp.beschleunigungy = 0;
         }
-        s.fill(0,255,0);
+        if(atp.getIsClicked() == false){s.fill(0,255,0);}
+        else{s.fill(0,0,255)}
+
         s.ellipse(atp.getCorX(), atp.getCorY(), 5, 5);
         var speedy = atp.getVelocityY() + atp.beschleunigungy;
         if(!(atp.getCorX() == atp.getNearestGoldAtom().getCorX())){
@@ -88,12 +92,12 @@ var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
       }
         for(var i = 0;i<distances.length;i++){
           if(distances[i] <= d){
-            console.log(distances[i]);
-            console.log(d);
+            //console.log(distances[i]);
+          //  console.log(d);
             d=distances[i];
 
             atp.setNearestGoldAtom(goldAtomArray[i]);
-            console.log(atp.getNearestGoldAtom());
+            //console.log(atp.getNearestGoldAtom());
 
           }else{}
         }
@@ -106,7 +110,7 @@ var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
         var bx = (4.05581*(10)**-36) / (atp.getDistanceToNearestGoldAtomx())**2;
         //console.log(a + "," + b);
         atp.forcey = a * by;
-        atp.forcex = a* bx;
+        atp.forcex = a * bx;
         atp.forcey = atp.forcey*10**-7;
         atp.forcex = atp.forcex*10**-7;
         atp.beschleunigungy = atp.round(atp.forcey/atp.getMasse(),2);
@@ -123,7 +127,41 @@ var goldAtomArray = [ga,ga2,ga3,ga4,ga5];
 
       }
 
+      s.mousePressed = () =>{
+        console.log("Clicked");
+        alphaTeilchenArray.forEach(function (element){element.clicked(s.mouseY,s.mouseX);})
+      }
 
+      s.showConsole = (p: AT) =>{
+        if(p.getIsClicked() == true && consoleLogArray[0] == null){
+            consoleLogArray[0] = p;
+
+
+        }else if(p.getIsClicked() == true && consoleLogArray[0] != p){
+          consoleLogArray[0].setIsClicked(false);
+          consoleLogArray[0] = p;
+        }
+      }
+
+      s.DataLog = () => {
+        consoleLogArray.forEach(function (element) {
+            console.table([{DistanceX: element.getDistanceToNearestGoldAtomx(), DistanceY: element.getDistanceToNearestGoldAtomy(), ForceX: element.forcex, ForceY: element.forcey}])
+            console.clear();
+            document.getElementById("GY").innerHTML = "Geschwindigkeit in Y Richtung: " + round((element.getVelocityY()*10**7)*-1,3).toString() + " m/s";
+            document.getElementById("GX").innerHTML = "Geschwindigkeit in X Richtung: " + round((element.getVelocityX()*10**7),3).toString() + " m/s";
+        })
+      }
+
+      function round(wert, dez) {
+        wert = parseFloat(wert);
+        if (!wert) return 0;
+        dez = parseInt(dez);
+        if (!dez) dez=0;
+
+        var umrechnungsfaktor = Math.pow(10,dez);
+
+        return Math.round(wert * umrechnungsfaktor) / umrechnungsfaktor;
+      }
 
 
 
@@ -141,6 +179,7 @@ function newAT(n:number){
 function simplifyDraw(p: AT[]){
   for(var i = 0;i<p.length;i++){
     s.calcMinDistance(p[i]);
+    s.showConsole(p[i]);
     s.drawAplha(p[i]);
     //s.calcForce(p[i]);
 
