@@ -2,3 +2,10 @@ npm init
 npm i webpack --save-dev
 npm i webpack-cli --save-dev
 npx webpack || webpack --watch
+
+
+working Example:
+http://sim.lucahumke.bplaced.net
+
+documentation(German):
+http://doc.lucahumke.bplaced.net
