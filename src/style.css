@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Heebo', sans-serif;
+}
+
+body {
+  background-color: #000e1a;
+}
+.menu{
+  font-family: "Heebo";
+  position: relative;
+  background-color: black;
+  color: white;
+  height: 600px;
+  width: 450px;
+  float: left;
+  margin-top: 1%;
+  margin-left: 10%;
+  border-color: black;
+
+
+}
+.top{
+  text-align: center;
+  font-family: "Heebo";
+  color: white;
+}
+
+a{
+  font-family: "Heebo";
+  background-color: black;
+  color: White;
+  text-align: center;
+  font-size: 25px;
+}
+
+.link{
+  position: absolute;
+  left: 40%;
+  margin-top: 300px;
+  top: 500px;
+}
+
+h1{
+  text-align: center;
+  text-decoration: underline;
+}
+
+#restart{
+  background-color: red;
+  border-color: black;
+  position: absolute;
+  width: 110px;
+  height: 35px;
+  margin-left: 180px;
+  margin-bottom: 20px;
+  bottom: 0;
+}
+
+p{
+  margin-left: 20px;
+}
+
+h2{
+  margin-top: 20px;
+  text-align: center;
+  text-decoration-color: white;
+  text-decoration: underline;
+  font-size: 35px;
+}
+
+.canvas{
+  position: absolute;
+  margin-top: 5%;
+}

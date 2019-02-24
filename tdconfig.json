@@ -1,0 +1,22 @@
+{
+"compilerOptions": {
+    "moduleResolution": "node",
+    "lib": [
+        "es6",
+        "dom"
+    ]
+},
+"include": [
+        "globals.d.ts",
+        <Include file paths to documents that should be documented.>
+        "src/AlphaTeilchen.ts",
+        "src/app.ts",
+        "src/GoldAtom.ts",
+    ],
+"exclude": [
+        "node_modules",
+        "p5.js",
+        "src/typings",
+        "src/**/*.test.ts"
+    ]
+}

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="src/style.css">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Streuversuch Simulation</title>
@@ -9,11 +11,34 @@
     <script src="./p5.js/lib/addons/p5.dom.min.js" type="text/javascript"></script>
     <script src="./p5.js/lib/addons/p5.sound.min.js" type="text/javascript"></script>
 
-    <script src="./dist/bundle.js"></script>
-    
+
+
 
   </head>
   <body>
-
-  </body>
+    <div class="top">
+      <h1>Rutherfordscher Streuversuch</h1>
+      <br>
+      Die Simulation funktioniert am besten auf einem 16:9 Monitor. Der Browser sollte im Vollbildmodus sein und Addons, die Java Script blockieren könnten, sollten ausgeschaltet werden.
+      <br>
+      Entwickelt von Luca-Miguel Humke.
+    </div>
+    <div class="menu">
+      <h2>Menü</h2>
+      <p id="GY"> Abgelenkte Alpha-Teilchen </p>
+      <br>
+      <br>
+      <br>
+      <input type="range" min="1" max="20" value="10" class="slider" id="myRange">
+      <p id="Value"> 10 </p>
+      <button id="restart">Neustart</button>
+    </div>
+    <div class="canvas">
+      <script src="./dist/bundle.js"></script>
+    </div>
+    <br>
+    <div class="link" >
+    <a href="http://doc.lucahumke.bplaced.net"> Hier geht es zur Dokumentation</a>
+  </div>
+    </body>
 </html>
